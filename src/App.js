@@ -1,15 +1,15 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import TodoList from './TodoList';
 import DevTools from 'mobx-react-devtools';
-import observableTodoStore from './store/ObservableTodoStore';
 
 function App() {
-  return (
 
+  return (
     <div className="App">
-      
-      <DevTools />
+      <TodoList ></TodoList>
+      <DevTools></DevTools>
     </div>
   );
 }

@@ -3,6 +3,8 @@ class TodoStore{
     todos = [];
     pendingRequests = 0;
 
+    
+
     get completedTodosCount(){
         return this.todos.filter(
             todo => todo.completed === true
@@ -18,11 +20,14 @@ class TodoStore{
     }
 
     addTodo(task){
+
         this.todos.push({
             task: task,
             completed: false,
             assignee: null,
         })
+
+
     }
 }
 

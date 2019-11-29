@@ -1,13 +1,19 @@
-import mobx, { observable, computed} from 'mobx';
-import { mobxDidRunLazyInitializersSymbol } from 'mobx/lib/internal';
+
+
+import {autorun, computed, observable, action} from 'mobx';
 
 class ObservableTodoStore{
     
-    @observable todos = [];
+    @observable todos = []
     @observable pendingRequests = 0;
 
     constructor(){
-        mobx.autorun(()=> console.log(this.report));
+        autorun(()=>console.log("Store create"));
+        let sessionTodos = localStorage.getItem("todos");
+        if(sessionTodos !== null){
+            this.todos = JSON.parse(sessionTodos);
+        }
+        
     }
 
     @computed
@@ -26,13 +32,50 @@ class ObservableTodoStore{
                 +`Progress: ${this.completedTodosCount} / ${this.todos.length}`
     }
 
-    addTodo(task){
-        this.todos.push({
-            task: task,
+    // @action
+    addTodo(newTask){
+        
+
+        let todo = {
+            task: newTask,
             completed: false,
             assignee: null,
+            toggle: false
+        }
+        console.log('newTask addTodo->', todo);
+        // this.todos.push(newTask)
+        this.todos.push({
+            task: newTask,
+            completed: false,
+            assignee: null,
+            toggle: false
         })
+
+        localStorage.setItem("todos", JSON.stringify(this.todos));
+    }
+
+    deleteTodo(idx){
+
+        console.log("deleteTOdo");
+        console.log("idx->", idx);
+
+        this.todos = this.todos.filter((todo, i)=> i !== idx);
+
+        localStorage.setItem("todos", JSON.stringify(this.todos));
+    }
+
+    onToggle(idx){
+        const nextTodoItems = this.todos.map( (todo, i) => {
+            if( i === idx){
+                todo.toggle = !todo.toggle
+            }
+            return todo;
+        })
+
+        this.todos = nextTodoItems;
+
+        localStorage.setItem("todos", JSON.stringify(this.todos));
     }
 }
 
-const observableTodoStore = new ObservableTodoStore();
+export default ObservableTodoStore;
